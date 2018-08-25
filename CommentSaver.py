@@ -8,7 +8,7 @@ import bs4
 import htmlGetter
 
 # 生放送の動画のIDをVIDEO_IDに代入
-VIDEO_ID = "8cTopYQzpuU"
+VIDEO_ID = ""
 OUTPUT_DIR = "./CommentFiles/"
 
 CONTINUATION_URL_FORMAT = "https://www.youtube.com/live_chat_replay?continuation={continuation}"
@@ -57,7 +57,7 @@ def get_chat_text(actions):
             comment_data = item['replayChatItemAction']['actions'][0]['addChatItemAction']['item']['liveChatTextMessageRenderer']
             time = comment_data['timestampText']['simpleText']
             name = comment_data['authorName']['simpleText']
-            text = comment_data['message']['runs'][0]['text']
+            text = comment_data['message']['simpleText']
             line = "{time}\t{name}\t{text}\n".format(time=time, name=name, text=text)
             lines.append(line)
             print(line)
@@ -94,9 +94,15 @@ if __name__ == "__main__":
     args = sys.argv
     if len(args) > 1:
         VIDEO_ID = args[1]
+
     url = "https://www.youtube.com/watch?v="+VIDEO_ID
+    # urlのリストから取得する
+    '''
+    for url in urls:
+        initial_continuation = get_initial_continuation(url)
+        get_live_chat_replay(initial_continuation)
+    '''
+
     # 生放送の録画ページから最初のcontinuationを取得する
     initial_continuation = get_initial_continuation(url)
     get_live_chat_replay(initial_continuation)
-
-
